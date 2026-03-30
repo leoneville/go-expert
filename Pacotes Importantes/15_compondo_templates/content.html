@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+{{ template "header.html" }}
+
+<body>
+    <h1>Cursos</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Horas</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range . }}
+            {{ if gt .CargaHoraria 20 }}
+            <tr>
+                <td>{{.Nome}}</td>
+                <td>{{.CargaHoraria}}</td>
+            </tr>
+            {{ end }}
+            {{ end }}
+
+        </tbody>
+    </table>
+</body>
+{{ template "footer.html" }}
+
+</html>
