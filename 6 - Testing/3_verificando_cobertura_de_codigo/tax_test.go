@@ -1,0 +1,34 @@
+package tax
+
+import "testing"
+
+// func TestCalculateTax(t *testing.T) {
+// 	amount := 500.0
+// 	expected := 6.0
+
+// 	result := CalculateTax(amount)
+
+// 	if result != expected {
+// 		t.Errorf("Expected %f but got %f", expected, result)
+// 	}
+// }
+
+func TestCalculateTaxBatch(t *testing.T) {
+	type calcTax struct {
+		amount, expected float64
+	}
+
+	tests := []calcTax{
+		{500.0, 5.0},
+		{1000.0, 10.0},
+		{1500.0, 10.0},
+		{0.0, 0.0},
+	}
+
+	for i, test := range tests {
+		result := CalculateTax(test.amount)
+		if result != test.expected {
+			t.Errorf("Expected %f but got %f on index %d", test.expected, result, i+1)
+		}
+	}
+}
