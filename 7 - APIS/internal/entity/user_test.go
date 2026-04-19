@@ -27,7 +27,7 @@ func TestUserValidatePassword(t *testing.T) {
 	user, err := NewUser(name, email, password)
 
 	assert.Nil(t, err)
-	assert.True(t, user.ComparePassword(password))
-	assert.False(t, user.ComparePassword("secretpwd"))
+	assert.True(t, user.ValidatePassword(password))
+	assert.False(t, user.ValidatePassword("secretpwd"))
 	assert.NotEqual(t, user.Password, password)
 }

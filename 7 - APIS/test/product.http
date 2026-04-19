@@ -1,7 +1,37 @@
-POST http://localhost:8000/products
+POST http://localhost:8000/products HTTP/1.1
 Content-Type: application/json
 
 {
     "name": "My Product",
     "price": 100
 }
+
+###
+
+GET http://localhost:8000/products/1fafa726-32ac-4a4b-97c8-b1d9bd0dbd20 HTTP/1.1
+Content-Type: application/json
+
+###
+
+PUT http://localhost:8000/products/1fafa726-32ac-4a4b-97c8-b1d9bd0dbd20 HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Dualshock Controller",
+    "price": 599.90
+}
+
+###
+
+DELETE http://localhost:8000/products/1fafa726-32ac-4a4b-97c8-b1d9bd0dbd20 HTTP/1.1
+
+###
+
+GET http://localhost:8000/products HTTP/1.1
+
+###
+
+GET http://localhost:8000/products?sort=desc&page=1&limit=2 HTTP/1.1
+
+###
+

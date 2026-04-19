@@ -9,10 +9,13 @@ import (
 	"github.com/leoneville/goexpert/api/internal/infra/database"
 	"github.com/leoneville/goexpert/api/internal/infra/webserver/handlers"
 	"gorm.io/gorm"
+
+	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/chi/v5"
 )
 
 func main() {
-	_, err := configs.LoadConfig(".")
+	config, err := configs.LoadConfig(".")
 	if err != nil {
 		panic(err)
 	}
@@ -26,6 +29,20 @@ func main() {
 	productDB := database.NewProductRepository(db)
 	productHandler := handlers.NewProductHandler(productDB)
 
-	http.HandleFunc("/products", productHandler.CreateProduct)
-	http.ListenAndServe(":8000", nil)
+	userDB := database.NewUserRepository(db)
+	userHandler := handlers.NewUserHandler(userDB, config.TokenAuth, config.JWTExpiresIn)
+
+	r := chi.NewRouter()
+	r.Use(middleware.Logger)
+
+	r.Post("/products", productHandler.CreateProduct)
+	r.Get("/products/{id}", productHandler.GetProduct)
+	r.Get("/products", productHandler.GetProducts)
+	r.Put("/products/{id}", productHandler.UpdateProduct)
+	r.Delete("/products/{id}", productHandler.DeleteProduct)
+
+	r.Post("/users", userHandler.Create)
+	r.Post("/generate-token", userHandler.GetJWT)
+
+	http.ListenAndServe(":8000", r)
 }

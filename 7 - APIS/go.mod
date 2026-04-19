@@ -4,6 +4,8 @@ go 1.26.1
 
 require (
 	github.com/glebarez/sqlite v1.11.0
+	github.com/go-chi/chi v1.5.1
+	github.com/go-chi/chi/v5 v5.2.5
 	github.com/go-chi/jwtauth v1.2.0
 	github.com/go-openapi/testify/v2 v2.4.2
 	github.com/google/uuid v1.6.0

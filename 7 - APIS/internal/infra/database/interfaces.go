@@ -2,12 +2,12 @@ package database
 
 import "github.com/leoneville/goexpert/api/internal/entity"
 
-type UserInterface interface {
+type IUserRepository interface {
 	Create(user *entity.User) error
 	FindByEmail(email string) (*entity.User, error)
 }
 
-type ProductInterface interface {
+type IProductRepository interface {
 	Create(product *entity.Product) error
 	FindAll(page, limit int, sort string) ([]entity.Product, error)
 	FindByID(id string) (*entity.Product, error)
