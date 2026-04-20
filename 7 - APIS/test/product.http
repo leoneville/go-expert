@@ -28,6 +28,7 @@ DELETE http://localhost:8000/products/1fafa726-32ac-4a4b-97c8-b1d9bd0dbd20 HTTP/
 ###
 
 GET http://localhost:8000/products HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzY2MzcyODAsInN1YiI6ImQ1NGU1MTYxLTRmZDktNDhiMy05ODg1LTA2NTA5MDYwZTY5NyJ9.7f29fhWejEDP6FKrulZ0ACSIG0arFS7WbxnI1krhjKI
 
 ###
 
