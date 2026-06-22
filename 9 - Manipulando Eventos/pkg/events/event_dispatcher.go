@@ -45,6 +45,29 @@ func (ed *EventDispatcher) Has(eventName string, handler EventHandlerInterface) 
 	return false
 }
 
+func (ed *EventDispatcher) Remove(eventName string, handler EventHandlerInterface) error {
+	handlers, ok := ed.handlers[eventName]
+	if !ok {
+		return nil
+	}
+
+	for i, h := range handlers {
+		if h == handler {
+			ed.handlers[eventName] = slices.Delete(handlers, i, i+1)
+			return nil
+
+			// oldLen := len(handlers)
+
+			// handlers = append(handlers[:i], handlers[i+1:]...)
+			// clear(handlers[len(handlers):oldLen])
+
+			// ed.handlers[eventName] = handlers
+			// return nil
+		}
+	}
+	return nil
+}
+
 func (ed *EventDispatcher) Clear() error {
 	ed.handlers = make(map[string][]EventHandlerInterface)
 	return nil
