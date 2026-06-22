@@ -2,8 +2,8 @@ package rabbitmq
 
 import amqp "github.com/rabbitmq/amqp091-go"
 
-func OpenChannel() (*amqp.Channel, error) {
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:15672/")
+func OpenChannel() *amqp.Channel {
+	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
 	if err != nil {
 		panic(err)
 	}
@@ -13,7 +13,7 @@ func OpenChannel() (*amqp.Channel, error) {
 		panic(err)
 	}
 
-	return ch, nil
+	return ch
 }
 
 func Consume(ch *amqp.Channel, out chan<- amqp.Delivery) error {
