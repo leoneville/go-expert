@@ -18,14 +18,21 @@ func NewEventDispatcher() *EventDispatcher {
 }
 
 func (ed *EventDispatcher) Register(eventName string, handler EventHandlerInterface) error {
-	if _, ok := ed.handlers[eventName]; ok {
-		if slices.Contains(ed.handlers[eventName], handler) {
-			return ErrHandlerAlreadyRegistered
-		}
+	if ed.Has(eventName, handler) {
+		return ErrHandlerAlreadyRegistered
 	}
 
 	ed.handlers[eventName] = append(ed.handlers[eventName], handler)
 	return nil
+}
+
+func (ed *EventDispatcher) Has(eventName string, handler EventHandlerInterface) bool {
+	if _, ok := ed.handlers[eventName]; ok {
+		if slices.Contains(ed.handlers[eventName], handler) {
+			return true
+		}
+	}
+	return false
 }
 
 func (ed *EventDispatcher) Clear() error {
