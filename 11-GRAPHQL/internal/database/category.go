@@ -17,13 +17,15 @@ func NewCategory(db *sql.DB) *Category {
 	return &Category{db: db}
 }
 
-func (c *Category) Create(name, description string) (Category, error) {
+func (c *Category) Create(name, description string) (*Category, error) {
 	id := uuid.New().String()
-	_, err := c.db.Exec("INSERT INTO categories (id, name, description) VALUES ($1, $2, $3)", id, name, description)
+	query := `INSERT INTO categories (id, name, description) VALUES ($1, $2, $3)`
+
+	_, err := c.db.Exec(query, id, name, description)
 	if err != nil {
-		return Category{}, err
+		return nil, err
 	}
-	return Category{
+	return &Category{
 		ID:          id,
 		Name:        name,
 		Description: description,
