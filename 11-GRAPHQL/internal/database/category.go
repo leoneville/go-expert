@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"database/sql"
 
 	"github.com/google/uuid"
@@ -17,11 +18,11 @@ func NewCategory(db *sql.DB) *Category {
 	return &Category{db: db}
 }
 
-func (c *Category) Create(name, description string) (*Category, error) {
+func (c *Category) Create(ctx context.Context, name, description string) (*Category, error) {
 	id := uuid.New().String()
 	query := `INSERT INTO categories (id, name, description) VALUES ($1, $2, $3)`
 
-	_, err := c.db.Exec(query, id, name, description)
+	_, err := c.db.ExecContext(ctx, query, id, name, description)
 	if err != nil {
 		return nil, err
 	}
@@ -32,8 +33,8 @@ func (c *Category) Create(name, description string) (*Category, error) {
 	}, nil
 }
 
-func (c *Category) FindAll() ([]Category, error) {
-	rows, err := c.db.Query("SELECT id, name, description FROM categories")
+func (c *Category) FindAll(ctx context.Context) ([]Category, error) {
+	rows, err := c.db.QueryContext(ctx, "SELECT id, name, description FROM categories")
 	if err != nil {
 		return nil, err
 	}

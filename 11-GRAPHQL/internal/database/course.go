@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"database/sql"
 
 	"github.com/google/uuid"
@@ -18,11 +19,11 @@ func NewCourse(db *sql.DB) *Course {
 	return &Course{db: db}
 }
 
-func (c *Course) Create(name, description, categoryID string) (*Course, error) {
+func (c *Course) Create(ctx context.Context, name, description, categoryID string) (*Course, error) {
 	id := uuid.New().String()
 	query := `INSERT INTO courses (id, name, description, category_id) VALUES ($1, $2, $3, $4)`
 
-	_, err := c.db.Exec(query, id, name, description, categoryID)
+	_, err := c.db.ExecContext(ctx, query, id, name, description, categoryID)
 	if err != nil {
 		return nil, err
 	}
@@ -35,9 +36,9 @@ func (c *Course) Create(name, description, categoryID string) (*Course, error) {
 	}, nil
 }
 
-func (c *Course) FindAll() ([]Course, error) {
+func (c *Course) FindAll(ctx context.Context) ([]Course, error) {
 	query := `SELECT id, name, description, category_id FROM courses`
-	rows, err := c.db.Query(query)
+	rows, err := c.db.QueryContext(ctx, query)
 	if err != nil {
 		return nil, err
 	}
