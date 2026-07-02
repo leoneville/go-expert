@@ -7,7 +7,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/leoneville/graphql/graph/model"
 )
@@ -88,7 +87,16 @@ func (r *mutationResolver) UpdateCategory(ctx context.Context, categoryID string
 
 // UpdateCourse is the resolver for the updateCourse field.
 func (r *mutationResolver) UpdateCourse(ctx context.Context, courseID string, input model.NewCourse) (*model.Course, error) {
-	panic(fmt.Errorf("not implemented: UpdateCourse - updateCourse"))
+	course, err := r.CourseDB.UpdateCourse(ctx, courseID, input.Name, *input.Description)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.Course{
+		ID:          course.ID,
+		Name:        course.Name,
+		Description: &course.Description,
+	}, nil
 }
 
 // DeleteCategory is the resolver for the deleteCategory field.
@@ -107,7 +115,16 @@ func (r *mutationResolver) DeleteCategory(ctx context.Context, categoryID string
 
 // DeleteCourse is the resolver for the deleteCourse field.
 func (r *mutationResolver) DeleteCourse(ctx context.Context, courseID string) (*model.Course, error) {
-	panic(fmt.Errorf("not implemented: DeleteCourse - deleteCourse"))
+	course, err := r.CourseDB.DeleteCourse(ctx, courseID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.Course{
+		ID:          course.ID,
+		Name:        course.Name,
+		Description: &course.Description,
+	}, nil
 }
 
 // Categories is the resolver for the categories field.
@@ -164,7 +181,16 @@ func (r *queryResolver) Category(ctx context.Context, categoryID string) (*model
 
 // Course is the resolver for the course field.
 func (r *queryResolver) Course(ctx context.Context, courseID string) (*model.Course, error) {
-	panic(fmt.Errorf("not implemented: Course - course"))
+	course, err := r.CourseDB.FindByID(ctx, courseID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.Course{
+		ID:          course.ID,
+		Name:        course.Name,
+		Description: &course.Description,
+	}, nil
 }
 
 // Category returns CategoryResolver implementation.

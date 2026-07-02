@@ -81,3 +81,53 @@ func (c *Course) FindByCategoryID(ctx context.Context, categoryID string) ([]*Co
 
 	return courses, nil
 }
+
+func (c *Course) FindByID(ctx context.Context, courseID string) (*Course, error) {
+	query := `SELECT id, name, description, category_id FROM courses WHERE id = $1`
+
+	var id, name, description, category_id string
+	if err := c.db.QueryRowContext(ctx, query, courseID).Scan(&id, &name, &description, &category_id); err != nil {
+		return nil, err
+	}
+
+	return &Course{
+		ID:          id,
+		Name:        name,
+		Description: description,
+		CategoryID:  category_id,
+	}, nil
+}
+
+func (c *Course) UpdateCourse(ctx context.Context, courseID string, name, description string) (*Course, error) {
+	query := `UPDATE courses SET name = $1, description = $2 WHERE id = $3 RETURNING *`
+
+	var id, dbName, dbDescription, category_id string
+	if err := c.db.QueryRowContext(
+		ctx, query, name, description, courseID,
+	).Scan(&id, &dbName, &dbDescription, &category_id); err != nil {
+		return nil, err
+	}
+
+	return &Course{
+		ID:          id,
+		Name:        dbName,
+		Description: dbDescription,
+		CategoryID:  category_id,
+	}, nil
+}
+
+func (c *Course) DeleteCourse(ctx context.Context, courseID string) (*Course, error) {
+	query := `DELETE FROM courses where id = $1 RETURNING *`
+
+	var id, name, description, category_id string
+	if err := c.db.QueryRowContext(ctx, query, courseID).Scan(&id, &name, &description, &category_id); err != nil {
+		return nil, err
+	}
+
+	return &Course{
+		ID:          id,
+		Name:        name,
+		Description: description,
+		CategoryID:  category_id,
+	}, nil
+}
