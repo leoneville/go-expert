@@ -7,6 +7,7 @@ package graph
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/leoneville/graphql/graph/model"
 )
@@ -71,6 +72,26 @@ func (r *mutationResolver) CreateCourse(ctx context.Context, input model.NewCour
 	}, nil
 }
 
+// UpdateCategory is the resolver for the updateCategory field.
+func (r *mutationResolver) UpdateCategory(ctx context.Context, categoryID string, input model.NewCategory) (*model.Category, error) {
+	panic(fmt.Errorf("not implemented: UpdateCategory - updateCategory"))
+}
+
+// UpdateCourse is the resolver for the updateCourse field.
+func (r *mutationResolver) UpdateCourse(ctx context.Context, courseID string, input model.NewCourse) (*model.Course, error) {
+	panic(fmt.Errorf("not implemented: UpdateCourse - updateCourse"))
+}
+
+// DeleteCategory is the resolver for the deleteCategory field.
+func (r *mutationResolver) DeleteCategory(ctx context.Context, categoryID string) (*model.Category, error) {
+	panic(fmt.Errorf("not implemented: DeleteCategory - deleteCategory"))
+}
+
+// DeleteCourse is the resolver for the deleteCourse field.
+func (r *mutationResolver) DeleteCourse(ctx context.Context, courseID string) (*model.Course, error) {
+	panic(fmt.Errorf("not implemented: DeleteCourse - deleteCourse"))
+}
+
 // Categories is the resolver for the categories field.
 func (r *queryResolver) Categories(ctx context.Context) ([]*model.Category, error) {
 	categories, err := r.CategoryDB.FindAll(ctx)
@@ -107,6 +128,16 @@ func (r *queryResolver) Courses(ctx context.Context) ([]*model.Course, error) {
 	}
 
 	return coursesModel, nil
+}
+
+// Category is the resolver for the category field.
+func (r *queryResolver) Category(ctx context.Context, categoryID string) (*model.Category, error) {
+	panic(fmt.Errorf("not implemented: Category - category"))
+}
+
+// Course is the resolver for the course field.
+func (r *queryResolver) Course(ctx context.Context, courseID string) (*model.Course, error) {
+	panic(fmt.Errorf("not implemented: Course - course"))
 }
 
 // Category returns CategoryResolver implementation.
