@@ -74,7 +74,16 @@ func (r *mutationResolver) CreateCourse(ctx context.Context, input model.NewCour
 
 // UpdateCategory is the resolver for the updateCategory field.
 func (r *mutationResolver) UpdateCategory(ctx context.Context, categoryID string, input model.NewCategory) (*model.Category, error) {
-	panic(fmt.Errorf("not implemented: UpdateCategory - updateCategory"))
+	category, err := r.CategoryDB.UpdateCategory(ctx, categoryID, input.Name, *input.Description)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.Category{
+		ID:          categoryID,
+		Name:        category.Name,
+		Description: &category.Description,
+	}, nil
 }
 
 // UpdateCourse is the resolver for the updateCourse field.
@@ -84,7 +93,16 @@ func (r *mutationResolver) UpdateCourse(ctx context.Context, courseID string, in
 
 // DeleteCategory is the resolver for the deleteCategory field.
 func (r *mutationResolver) DeleteCategory(ctx context.Context, categoryID string) (*model.Category, error) {
-	panic(fmt.Errorf("not implemented: DeleteCategory - deleteCategory"))
+	category, err := r.CategoryDB.DeleteCategory(ctx, categoryID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.Category{
+		ID:          categoryID,
+		Name:        category.Name,
+		Description: &category.Description,
+	}, nil
 }
 
 // DeleteCourse is the resolver for the deleteCourse field.
@@ -132,7 +150,16 @@ func (r *queryResolver) Courses(ctx context.Context) ([]*model.Course, error) {
 
 // Category is the resolver for the category field.
 func (r *queryResolver) Category(ctx context.Context, categoryID string) (*model.Category, error) {
-	panic(fmt.Errorf("not implemented: Category - category"))
+	category, err := r.CategoryDB.FindByID(ctx, categoryID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.Category{
+		ID:          category.ID,
+		Name:        category.Name,
+		Description: &category.Description,
+	}, nil
 }
 
 // Course is the resolver for the course field.

@@ -70,3 +70,64 @@ func (c *Category) FindByCourseID(ctx context.Context, courseID string) (*Catego
 		Description: description,
 	}, nil
 }
+
+func (c *Category) FindByID(ctx context.Context, categoryID string) (*Category, error) {
+	query := `SELECT id, name, description FROM categories WHERE id = $1`
+
+	var id, name, description string
+	if err := c.db.QueryRowContext(ctx, query, categoryID).Scan(&id, &name, &description); err != nil {
+		return nil, err
+	}
+
+	return &Category{
+		ID:          id,
+		Name:        name,
+		Description: description,
+	}, nil
+}
+
+func (c *Category) UpdateCategory(ctx context.Context, categoryID, name, description string) (*Category, error) {
+	query := `UPDATE categories SET name = $1, description = $2 WHERE id = $3 RETURNING name, description`
+
+	var dbName, dbDescription string
+	if err := c.db.QueryRowContext(
+		ctx, query, name, description, categoryID,
+	).Scan(&dbName, &dbDescription); err != nil {
+		return nil, err
+	}
+	return &Category{
+		ID:          categoryID,
+		Name:        dbName,
+		Description: dbDescription,
+	}, nil
+}
+
+func (c *Category) DeleteCategory(ctx context.Context, categoryID string) (*Category, error) {
+	deleteCoursesQuery := `DELETE FROM courses WHERE category_id = $1`
+	deleteCategoryQuery := `DELETE FROM categories WHERE id = $1 RETURNING name, description`
+
+	tx, err := c.db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback()
+
+	if _, err := tx.ExecContext(ctx, deleteCoursesQuery, categoryID); err != nil {
+		return nil, err
+	}
+
+	var name, description string
+	if err := tx.QueryRowContext(ctx, deleteCategoryQuery, categoryID).Scan(&name, &description); err != nil {
+		return nil, err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return nil, err
+	}
+
+	return &Category{
+		ID:          categoryID,
+		Name:        name,
+		Description: description,
+	}, nil
+}
