@@ -1,0 +1,50 @@
+# Binaries and templates
+# http://golang.org/cmd/go/#hdr-Build_and_test_flags_force_rebuilding_of_packages
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+app
+
+# Go tools
+*.test
+*.prof
+
+# Common IDEs/Editors
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*.swo
+*~
+
+# Operating System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Database and Local Data
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Environment/Secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Go vendor directory (optional - uncomment if you vendor dependencies)
+# vendor/
