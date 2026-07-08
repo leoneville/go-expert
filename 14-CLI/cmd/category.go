@@ -18,23 +18,12 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		name, _ := cmd.Flags().GetString("name")
-		cmd.Printf("Category called with name: %s\n", name)
-
-		exists, _ := cmd.Flags().GetBool("exists")
-		cmd.Printf("Category called with exists: %v\n", exists)
-
-		id, _ := cmd.Flags().GetInt16("id")
-		cmd.Printf("Category called with id: %v\n", id)
+		cmd.Help()
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(categoryCmd)
-	categoryCmd.PersistentFlags().StringP("name", "n", "", "Name of the category")
-	categoryCmd.PersistentFlags().BoolP("exists", "e", false, "Check if category exists")
-	categoryCmd.PersistentFlags().Int16P("id", "i", 0, "ID of the category")
-
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
