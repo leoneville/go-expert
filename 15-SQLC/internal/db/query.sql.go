@@ -26,6 +26,30 @@ func (q *Queries) CreateCategory(ctx context.Context, arg CreateCategoryParams) 
 	return err
 }
 
+const createCourse = `-- name: CreateCourse :exec
+INSERT INTO courses (id, name, description, category_id, price)
+VALUES (?,?,?,?,?)
+`
+
+type CreateCourseParams struct {
+	ID          string
+	Name        string
+	Description sql.NullString
+	CategoryID  string
+	Price       float64
+}
+
+func (q *Queries) CreateCourse(ctx context.Context, arg CreateCourseParams) error {
+	_, err := q.db.ExecContext(ctx, createCourse,
+		arg.ID,
+		arg.Name,
+		arg.Description,
+		arg.CategoryID,
+		arg.Price,
+	)
+	return err
+}
+
 const deleteCategory = `-- name: DeleteCategory :exec
 DELETE FROM categories WHERE id = ?
 `
@@ -47,6 +71,24 @@ func (q *Queries) GetCategory(ctx context.Context, id string) (Category, error) 
 	return i, err
 }
 
+const getCourse = `-- name: GetCourse :one
+SELECT id, category_id, name, description, price FROM courses
+WHERE id = ?
+`
+
+func (q *Queries) GetCourse(ctx context.Context, id string) (Course, error) {
+	row := q.db.QueryRowContext(ctx, getCourse, id)
+	var i Course
+	err := row.Scan(
+		&i.ID,
+		&i.CategoryID,
+		&i.Name,
+		&i.Description,
+		&i.Price,
+	)
+	return i, err
+}
+
 const listCategories = `-- name: ListCategories :many
 SELECT id, name, description FROM categories
 `
@@ -61,6 +103,50 @@ func (q *Queries) ListCategories(ctx context.Context) ([]Category, error) {
 	for rows.Next() {
 		var i Category
 		if err := rows.Scan(&i.ID, &i.Name, &i.Description); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listCourses = `-- name: ListCourses :many
+SELECT c.id, c.category_id, c.name, c.description, c.price, ca.name as category_name
+FROM courses c JOIN categories ca ON c.category_id = ca.id
+`
+
+type ListCoursesRow struct {
+	ID           string
+	CategoryID   string
+	Name         string
+	Description  sql.NullString
+	Price        float64
+	CategoryName string
+}
+
+func (q *Queries) ListCourses(ctx context.Context) ([]ListCoursesRow, error) {
+	rows, err := q.db.QueryContext(ctx, listCourses)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ListCoursesRow
+	for rows.Next() {
+		var i ListCoursesRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.CategoryID,
+			&i.Name,
+			&i.Description,
+			&i.Price,
+			&i.CategoryName,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
