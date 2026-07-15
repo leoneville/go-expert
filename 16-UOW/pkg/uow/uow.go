@@ -12,7 +12,7 @@ type RepositoryFactory func(*sql.Tx) any
 type UowInterface interface {
 	Register(name string, fn RepositoryFactory)
 	GetRepository(ctx context.Context, name string) (any, error)
-	Do(ctx context.Context, fn func(uow UowInterface) error) error
+	Do(ctx context.Context, fn func(uow *Uow) error) error
 	CommitOrRollback() error
 	Rollback() error
 	UnRegister(name string)
